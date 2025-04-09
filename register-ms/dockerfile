@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+# ⚠️ Asegúrate de instalar bcrypt aquí dentro del contenedor
+RUN npm install
+
+
+# Copiar todos los archivos antes de instalar dependencias
+COPY . .
+
+
+# Generar el cliente de Prisma (asegúrate que schema.prisma esté en prisma/)
+RUN npx prisma generate
+
+# Compilar el proyecto
+RUN npm run build
+
+# EXPOSE 3000
+
+CMD ["npm", "run", "start:prod"]

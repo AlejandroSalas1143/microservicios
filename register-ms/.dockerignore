@@ -1,0 +1,21 @@
+# Ignora dependencias locales
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Ignora el lockfile si prefieres que se genere dentro del contenedor
+# package-lock.json
+
+
+# Ignora directorios de compilación
+dist
+build
+
+# Ignora IDEs
+.vscode
+.idea
+
+# Ignora archivos del sistema operativo
+.DS_Store
+Thumbs.db

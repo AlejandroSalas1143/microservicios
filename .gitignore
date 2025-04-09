@@ -1,0 +1,17 @@
+# Ignora los node_modules y dist de todos los microservicios
+**/node_modules/
+**/dist/
+
+# Ignora archivos de entorno
+**/.env
+**/.env.*
+
+# Logs y temporales
+**/*.log
+**/tmp/
+**/temp/
+**/.cache/
+
+# IDEs
+.vscode/
+.idea/

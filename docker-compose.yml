@@ -1,0 +1,32 @@
+services:
+  postgres:
+      image: postgres:15
+      container_name: postgres
+      restart: always
+      environment:
+        POSTGRES_USER: registerms
+        POSTGRES_PASSWORD: registerms1
+        POSTGRES_DB: registerdb
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+
+  register-service:
+    build: ./register-ms
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+  
+  auth-service:
+    build: ./auth-ms
+    depends_on:
+      - postgres
+    ports:
+      - "3001:3001"
+      
+volumes:
+  pgdata:
+
+  
