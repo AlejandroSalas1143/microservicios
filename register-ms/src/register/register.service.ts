@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { PrismaService } from '../prisma.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 
@@ -68,6 +69,33 @@ export class RegisterService {
       console.error('Error al verificar la cuenta:', error);
       throw new Error('Error al activar la cuenta.');
     }
+  }
+
+  async changePassword(/*userId: number,*/ changePasswordDto: ChangePasswordDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: changePasswordDto.id } });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    const isMatch = await bcrypt.compare(changePasswordDto.currentPassword, user.password);
+    if (!isMatch) throw new UnauthorizedException('Contraseña actual incorrecta');
+
+    const newHash = await bcrypt.hash(changePasswordDto.newPassword, 10);
+    await this.prisma.user.update({
+      where: { id: changePasswordDto.id },
+      data: { password: newHash },
+    });
+  }
+
+  findAll() {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   forgotPassword(email: string) {

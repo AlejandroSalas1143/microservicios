@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Req, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { RegisterService } from './register.service';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { UpdateRegisterDto } from './dto/update-register.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('register')
 export class RegisterController {
@@ -21,16 +22,20 @@ export class RegisterController {
     return this.registerService.verifyAccount(token);
   }
 
+  @Get()
+  findAll() {
+    return this.registerService.findAll();
+  }
+
   @Post('forgot-password')
   forgotPassword(@Body('email') email: string) {
     return this.registerService.forgotPassword(email);
   }
 
-  @Post('reset-password/:token')
-  resetPassword(@Param('token') token: string, @Body('password') password: string) {
-    return this.registerService.resetPassword(token, password);
+  @Patch('change-password')
+  changePassword(/*@Req() req,*/ @Body() changePasswordDto: ChangePasswordDto) {
+    return this.registerService.changePassword(/*req.user.id,*/ changePasswordDto);
   }
-
   
   
 }
